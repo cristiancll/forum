@@ -8,6 +8,7 @@ import br.com.alura.forum.model.form.UpdateThreadForm;
 import br.com.alura.forum.repository.CourseRepository;
 import br.com.alura.forum.repository.ThreadRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -41,6 +42,7 @@ public class ThreadController {
     }
     
     @GetMapping
+    @Cacheable(value = "threadPostList")
     public Page<ThreadPostDTO> list(
             @RequestParam(required = false) String courseName, 
             @PageableDefault(sort="id", direction = Sort.Direction.ASC, page = 0, size = 10) Pageable pagination){
