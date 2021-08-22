@@ -8,6 +8,7 @@ import br.com.alura.forum.model.form.UpdateThreadForm;
 import br.com.alura.forum.repository.CourseRepository;
 import br.com.alura.forum.repository.ThreadRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,10 +36,7 @@ public class ThreadController {
     @GetMapping("/{id}")
     public ResponseEntity<DetailedThreadPostDTO> get(@PathVariable Long id){
         Optional<ThreadPost> thread = threadRepository.findById(id);
-        if(thread.isPresent()){
-            return ResponseEntity.ok(new DetailedThreadPostDTO(thread.get()));    
-        }
-        return ResponseEntity.notFound().build();
+        return thread.map(threadPost -> ResponseEntity.ok(new DetailedThreadPostDTO(threadPost))).orElseGet(() -> ResponseEntity.notFound().build());
     }
     
     @GetMapping
@@ -54,6 +52,7 @@ public class ThreadController {
     
     @PostMapping
     @Transactional
+    @CacheEvict(value = "threadPostList", allEntries = true)
     public ResponseEntity<ThreadPostDTO> register(@RequestBody @Valid ThreadForm threadForm, UriComponentsBuilder uriBuilder){
         ThreadPost threadPost = threadForm.convert(courseRepository);
         threadRepository.save(threadPost);
@@ -62,6 +61,7 @@ public class ThreadController {
     }
     @PutMapping("/{id}")
     @Transactional
+    @CacheEvict(value = "threadPostList", allEntries = true)
     public ResponseEntity<ThreadPostDTO> update(@PathVariable Long id, @RequestBody @Valid UpdateThreadForm form){
         Optional<ThreadPost> thread = threadRepository.findById(id);
         if(thread.isPresent()){
@@ -72,6 +72,7 @@ public class ThreadController {
 
     @DeleteMapping("/{id}")
     @Transactional
+    @CacheEvict(value = "threadPostList", allEntries = true)
     public ResponseEntity<?> delete(@PathVariable Long id){
         Optional<ThreadPost> thread = threadRepository.findById(id);
         if(thread.isPresent()){
