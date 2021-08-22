@@ -1,7 +1,5 @@
 package br.com.alura.forum.model;
 
-import br.com.alura.forum.model.form.ThreadForm;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,6 +26,8 @@ public class ThreadPost {
     @OneToMany(mappedBy = "thread")
     private List<ThreadReply> replies = new ArrayList<>();
 
+    public ThreadPost(){}
+    
     public ThreadPost(String title, String body, Course course){
         this.title = title;
         this.body = body;

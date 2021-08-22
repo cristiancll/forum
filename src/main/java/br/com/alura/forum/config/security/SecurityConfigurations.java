@@ -1,4 +1,4 @@
-package br.com.alura.forum.config.validation.security;
+package br.com.alura.forum.config.security;
 
 import br.com.alura.forum.repository.ForumUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +49,7 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.GET, "/threads/*").permitAll()
             .antMatchers(HttpMethod.POST, "/auth").permitAll()
             .antMatchers(HttpMethod.GET, "/actuator/**").permitAll()
+                
             .anyRequest().authenticated()
             .and().csrf().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -58,5 +59,7 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 
     // Configure static resources (JS, CSS, Images, etc)
     @Override
-    public void configure(WebSecurity web) throws Exception {}
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/**.html", "/v2/api-docs", "/webjars/**", "/configuration/**", "/swagger-resources/**");
+    }
 }

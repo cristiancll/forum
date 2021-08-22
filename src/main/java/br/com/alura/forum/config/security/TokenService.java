@@ -1,4 +1,4 @@
-package br.com.alura.forum.config.validation.security;
+package br.com.alura.forum.config.security;
 
 import br.com.alura.forum.model.ForumUser;
 import io.jsonwebtoken.Claims;

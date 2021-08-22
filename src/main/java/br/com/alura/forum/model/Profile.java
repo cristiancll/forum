@@ -13,6 +13,8 @@ public class Profile implements GrantedAuthority {
     private Long id;
     private String name;
 
+    public Profile(){}
+    
     public Long getId() {
         return id;
     }
