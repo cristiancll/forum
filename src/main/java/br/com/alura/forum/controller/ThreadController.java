@@ -8,6 +8,10 @@ import br.com.alura.forum.model.form.UpdateThreadForm;
 import br.com.alura.forum.repository.CourseRepository;
 import br.com.alura.forum.repository.ThreadRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -15,7 +19,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -38,10 +41,12 @@ public class ThreadController {
     }
     
     @GetMapping
-    public List<ThreadPostDTO> list(String courseName){
-        List<ThreadPost> threads;
-        if(courseName == null) threads = threadRepository.findAll();
-        else threads = threadRepository.findByCourse_Name(courseName);
+    public Page<ThreadPostDTO> list(
+            @RequestParam(required = false) String courseName, 
+            @PageableDefault(sort="id", direction = Sort.Direction.ASC, page = 0, size = 10) Pageable pagination){
+        Page<ThreadPost> threads;
+        if(courseName == null) threads = threadRepository.findAll(pagination);
+        else threads = threadRepository.findByCourse_Name(courseName, pagination);
         return ThreadPostDTO.convert(threads);
     }
     

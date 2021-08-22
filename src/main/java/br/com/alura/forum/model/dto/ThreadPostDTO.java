@@ -1,10 +1,9 @@
 package br.com.alura.forum.model.dto;
 
 import br.com.alura.forum.model.ThreadPost;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class ThreadPostDTO {
     
@@ -20,8 +19,9 @@ public class ThreadPostDTO {
         this.creationDate = thread.getCreationDate();
     }
 
-    public static List<ThreadPostDTO> convert(List<ThreadPost> threads) {
-        return threads.stream().map(ThreadPostDTO::new).collect(Collectors.toList());
+    public static Page<ThreadPostDTO> convert(Page<ThreadPost> threads) {
+//      return threads.stream().map(ThreadPostDTO::new).collect(Collectors.toList());
+        return threads.map(ThreadPostDTO::new);
     }
 
     public Long getId() {
